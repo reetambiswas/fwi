@@ -34,7 +34,7 @@ int main()
 	// std::string veloFn="marmousi.dat";
 	// std::string veloFn="marmsmooth.dat";
 	// std::string veloFn="marmhard.dat";
-	 std::string veloFn="homogenous.dat";
+	 std::string veloFn="homogenous.velo";
 	// std::string sourceFn="wavelet2.dat";
 	
 	
@@ -264,7 +264,7 @@ cudaStatus = cudaMemcpy(wavelet, d_wavelet , dimW[0]*dimW[1]*sizeof(float), cuda
 		//exit(1);
 		
 		//ABC
-		// ABC_inner<<<gridDim,blockDim>>>(d_velocity,d_field1,d_field2,d_wave_propagate_t,dx,dt,bc,NZ/*dimMod[0]*/,NX/*dimMod[1]*/);
+		 ABC_inner<<<gridDim,blockDim>>>(d_velocity,d_field1,d_field2,d_wave_propagate_t,dx,dt,bc,NZ/*dimMod[0]*/,NX/*dimMod[1]*/);
 		//ABC_outer<<<gridDim,blockDim>>>(d_velocity,d_field1,d_field2,d_wave_propagate_t,dx,dt,bc,dimMod[0],dimMod[1]);
 		// BadBoundaryCondition makes everything in the extra region zero
 		// myCudaMemset<<<gridDim,blockDim>>>(d_temp1, 0.0, NZ/*dimMod[0]*/, NX);

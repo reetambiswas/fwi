@@ -188,7 +188,7 @@ __global__ void ABC_inner(float* V,float* f1, float* f2, float* wave, float dx, 
 	if(bc==1)
 	{
 		//Applying Bounday condition for Top
-		if(row==1 && col<n-6)
+		if(row<60 && col<n-6)
 		{
 			 wave[ind(1,col+3,m,n)] = (2*V[ind(1,col+3,m,n)]*dx*dt*dt)/(dx+V[ind(1,col+3,m,n)]*dt)*
          ((wave[ind(2,col+3,m,n)]/(2*dt*dx) - f1[ind(2,col+3,m,n)]/(2*dx*dt)+
@@ -204,7 +204,7 @@ __global__ void ABC_inner(float* V,float* f1, float* f2, float* wave, float dx, 
 	
 	//Applying Bounday condition for Bottom
 	
-	if(row==1 && col<n-6)
+	if(row>60+122 && col<n-6)
 	{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 		wave[ind(m-2,col+3,m,n)] = -2.*dx*dt*dt*V[ind(m-2,col+3,m,n)]/(dx+V[ind(m-2,col+3,m,n)]*dt)*
        ((-wave[ind(m-3,col+3,m,n)]/(2*dt*dx) - f1[ind(m-2,col+3,m,n)]/(2*dt*dx) +
@@ -217,101 +217,101 @@ __global__ void ABC_inner(float* V,float* f1, float* f2, float* wave, float dx, 
        f1[ind(m-2,col+4,m,n)] - 2*f1[ind(m-2,col+3,m,n)] + f1[ind(m-2,col+2,m,n)]));
 	}
 
-	//Applying Boundary condition for right hand side
-	if(row<m-6 && col==n-1)
-	{
-		wave[ind(row+3,n-2,m,n)] =  -2*dx*dt*dt*V[ind(row+3,n-2,m,n)]/(dx+V[ind(row+3,n-2,m,n)]*dt)*
-       ((-wave[ind(row+3,n-3,m,n)]/(2*dt*dx) - f1[ind(row+3,n-2,m,n)]/(2*dt*dx) + 
-       f1[ind(row+3,n-3,m,n)]/(2*dt*dx)) + 
-  1/(2*dt*dt*V[ind(row+3,n-2,m,n)])*
-       (-2*f2[ind(row+3,n-2,m,n)] + f1[ind(row+3,n-2,m,n)] + wave[ind(row+3,n-3,m,n)] - 
-       2*f2[ind(row+3,n-3,m,n)] + f1[ind(row+3,n-3,m,n)]) + 
-  (-V[ind(row+3,n-2,m,n)]/(4*dx*dx))* 
-       (wave[ind(row+4,n-3,m,n)] - 2*wave[ind(row+3,n-3,m,n)] + wave[ind(row+2,n-3,m,n)] + 
-       f1[ind(row+4,n-2,m,n)] - 2*f1[ind(row+3,n-2,m,n)] + f1[ind(row+2,n-2,m,n)]));
-	}
+// 	//Applying Boundary condition for right hand side
+// 	if(row<m-6 && col==n-1)
+// 	{
+// 		wave[ind(row+3,n-2,m,n)] =  -2*dx*dt*dt*V[ind(row+3,n-2,m,n)]/(dx+V[ind(row+3,n-2,m,n)]*dt)*
+//        ((-wave[ind(row+3,n-3,m,n)]/(2*dt*dx) - f1[ind(row+3,n-2,m,n)]/(2*dt*dx) + 
+//        f1[ind(row+3,n-3,m,n)]/(2*dt*dx)) + 
+//   1/(2*dt*dt*V[ind(row+3,n-2,m,n)])*
+//        (-2*f2[ind(row+3,n-2,m,n)] + f1[ind(row+3,n-2,m,n)] + wave[ind(row+3,n-3,m,n)] - 
+//        2*f2[ind(row+3,n-3,m,n)] + f1[ind(row+3,n-3,m,n)]) + 
+//   (-V[ind(row+3,n-2,m,n)]/(4*dx*dx))* 
+//        (wave[ind(row+4,n-3,m,n)] - 2*wave[ind(row+3,n-3,m,n)] + wave[ind(row+2,n-3,m,n)] + 
+//        f1[ind(row+4,n-2,m,n)] - 2*f1[ind(row+3,n-2,m,n)] + f1[ind(row+2,n-2,m,n)]));
+// 	}
 
-	//Applying Boundary condition for left hand side
-	if(row<m-6 && col==1)
-	{
-		wave[ind(row+3,1,m,n)] =(2*V[ind(row+3,1,m,n)]*dx*dt*dt)/(dx+V[ind(row+3,1,m,n)]*dt)*
-       ((wave[ind(row+3,2,m,n)]/(2*dt*dx) - f1[ind(row+3,2,m,n)]/(2*dt*dx) +
-       f1[ind(row+3,1,m,n)]/(2*dt*dx)) + 
-  (-1/(2*dt*dt*V[ind(row+3,1,m,n)]))*
-       (-2*f2[ind(row+3,1,m,n)] + f1[ind(row+3,1,m,n)] + wave[ind(row+3,2,m,n)] -
-       2*f2[ind(row+3,2,m,n)] + f1[ind(row+3,2,m,n)]) +
-  (V[ind(row+3,1,m,n)]/(4*dx*dx))*
-       (wave[ind(row+4,2,m,n)] - 2*wave[ind(row+3,2,m,n)] + wave[ind(row+2,2,m,n)] +
-       f1[ind(row+4,1,m,n)] - 2*f1[ind(row+3,1,m,n)] + f1[ind(row+2,1,m,n)]));
-	}
+// 	//Applying Boundary condition for left hand side
+// 	if(row<m-6 && col==1)
+// 	{
+// 		wave[ind(row+3,1,m,n)] =(2*V[ind(row+3,1,m,n)]*dx*dt*dt)/(dx+V[ind(row+3,1,m,n)]*dt)*
+//        ((wave[ind(row+3,2,m,n)]/(2*dt*dx) - f1[ind(row+3,2,m,n)]/(2*dt*dx) +
+//        f1[ind(row+3,1,m,n)]/(2*dt*dx)) + 
+//   (-1/(2*dt*dt*V[ind(row+3,1,m,n)]))*
+//        (-2*f2[ind(row+3,1,m,n)] + f1[ind(row+3,1,m,n)] + wave[ind(row+3,2,m,n)] -
+//        2*f2[ind(row+3,2,m,n)] + f1[ind(row+3,2,m,n)]) +
+//   (V[ind(row+3,1,m,n)]/(4*dx*dx))*
+//        (wave[ind(row+4,2,m,n)] - 2*wave[ind(row+3,2,m,n)] + wave[ind(row+2,2,m,n)] +
+//        f1[ind(row+4,1,m,n)] - 2*f1[ind(row+3,1,m,n)] + f1[ind(row+2,1,m,n)]));
+// 	}
 	
-	//Applying Lower Right hand corner
-	if(row==1 && col==1)
-	{
+// 	//Applying Lower Right hand corner
+// 	if(row==1 && col==1)
+// 	{
 		
-		wave[ind(m-3,n-2,m,n)] = V[ind(m-3,n-2,m,n)]*dt*dx/(2*V[ind(m-3,n-2,m,n)]*dt + sqrt(2.)*dx)*
-       (wave[ind(m-4,n-2,m,n)]/dx + wave[ind(m-3,n-3,m,n)]/dx + 
-       sqrt(2.)/(V[ind(m-3,n-2,m,n)]*dt)*f2[ind(m-3,n-2,m,n)]);
+// 		wave[ind(m-3,n-2,m,n)] = V[ind(m-3,n-2,m,n)]*dt*dx/(2*V[ind(m-3,n-2,m,n)]*dt + sqrt(2.)*dx)*
+//        (wave[ind(m-4,n-2,m,n)]/dx + wave[ind(m-3,n-3,m,n)]/dx + 
+//        sqrt(2.)/(V[ind(m-3,n-2,m,n)]*dt)*f2[ind(m-3,n-2,m,n)]);
 
-wave[ind(m-2,n-3,m,n)] = V[ind(m-2,n-3,m,n)]*dt*dx/(2*V[ind(m-2,n-3,m,n)]*dt + sqrt(2.)*dx)*
-       (wave[ind(m-3,n-3,m,n)]/dx + wave[ind(m-2,n-4,m,n)]/dx + 
-       sqrt(2.)/(V[ind(m-2,n-3,m,n)]*dt)*f2[ind(m-2,n-3,m,n)]);
+// wave[ind(m-2,n-3,m,n)] = V[ind(m-2,n-3,m,n)]*dt*dx/(2*V[ind(m-2,n-3,m,n)]*dt + sqrt(2.)*dx)*
+//        (wave[ind(m-3,n-3,m,n)]/dx + wave[ind(m-2,n-4,m,n)]/dx + 
+//        sqrt(2.)/(V[ind(m-2,n-3,m,n)]*dt)*f2[ind(m-2,n-3,m,n)]);
 
-wave[ind(m-2,n-2,m,n)] = V[ind(m-2,n-2,m,n)]*dt*dx/(2*V[ind(m-2,n-2,m,n)]*dt + sqrt(2.)*dx)*
-       (wave[ind(m-3,n-2,m,n)]/dx + wave[ind(m-2,n-3,m,n)]/dx + 
-       sqrt(2.)/(V[ind(m-2,n-2,m,n)]*dt)*f2[ind(m-2,n-2,m,n)]);
+// wave[ind(m-2,n-2,m,n)] = V[ind(m-2,n-2,m,n)]*dt*dx/(2*V[ind(m-2,n-2,m,n)]*dt + sqrt(2.)*dx)*
+//        (wave[ind(m-3,n-2,m,n)]/dx + wave[ind(m-2,n-3,m,n)]/dx + 
+//        sqrt(2.)/(V[ind(m-2,n-2,m,n)]*dt)*f2[ind(m-2,n-2,m,n)]);
 		
-	}
+// 	}
 
-	//Applying Lower Left hand corner
-	if(row==5 && col==5)
-	{
-		wave[ind(m-3,1,m,n)] = V[ind(m-3,1,m,n)]*dt*dx/(2*V[ind(m-3,1,m,n)]*dt + sqrt(2.)*dx)*
-       (wave[ind(m-4,1,m,n)]/dx + wave[ind(m-3,2,m,n)]/dx +
-       sqrt(2.)/(V[ind(m-3,1,m,n)]*dt)*f2[ind(m-3,1,m,n)]);
+// 	//Applying Lower Left hand corner
+// 	if(row==5 && col==5)
+// 	{
+// 		wave[ind(m-3,1,m,n)] = V[ind(m-3,1,m,n)]*dt*dx/(2*V[ind(m-3,1,m,n)]*dt + sqrt(2.)*dx)*
+//        (wave[ind(m-4,1,m,n)]/dx + wave[ind(m-3,2,m,n)]/dx +
+//        sqrt(2.)/(V[ind(m-3,1,m,n)]*dt)*f2[ind(m-3,1,m,n)]);
 
-wave[ind(m-2,2,m,n)] = V[ind(m-2,2,m,n)]*dt*dx/(2*V[ind(m-2,2,m,n)]*dt + sqrt(2.)*dx)*
-       (wave[ind(m-3,2,m,n)]/dx + wave[ind(m-2,3,m,n)]/dx +
-       sqrt(2.)/(V[ind(m-2,2,m,n)]*dt)*f2[ind(m-2,2,m,n)]);
+// wave[ind(m-2,2,m,n)] = V[ind(m-2,2,m,n)]*dt*dx/(2*V[ind(m-2,2,m,n)]*dt + sqrt(2.)*dx)*
+//        (wave[ind(m-3,2,m,n)]/dx + wave[ind(m-2,3,m,n)]/dx +
+//        sqrt(2.)/(V[ind(m-2,2,m,n)]*dt)*f2[ind(m-2,2,m,n)]);
 
-wave[ind(m-2,1,m,n)] = V[ind(m-2,1,m,n)]*dt*dx/(2*V[ind(m-2,1,m,n)]*dt + sqrt(2.)*dx)*
-       (wave[ind(m-3,1,m,n)]/dx + wave[ind(m-2,2,m,n)]/dx +
-       sqrt(2.)/(V[ind(m-2,1,m,n)]*dt)*f2[ind(m-2,1,m,n)]);
-	}
+// wave[ind(m-2,1,m,n)] = V[ind(m-2,1,m,n)]*dt*dx/(2*V[ind(m-2,1,m,n)]*dt + sqrt(2.)*dx)*
+//        (wave[ind(m-3,1,m,n)]/dx + wave[ind(m-2,2,m,n)]/dx +
+//        sqrt(2.)/(V[ind(m-2,1,m,n)]*dt)*f2[ind(m-2,1,m,n)]);
+// 	}
 	
 
-if(bc==1)
-{
+// if(bc==1)
+// {
 
-  // for upper right hand corner
+//   // for upper right hand corner
 
-  wave[ind(2,n-2,m,n)] = V[ind(2,n-2,m,n)]*dt*dx/(2*V[ind(2,n-2,m,n)]*dt + sqrt(2.)*dx)*
-         (wave[ind(3,n-2,m,n)]/dx + wave[ind(2,n-3,m,n)]/dx +
-         sqrt(2.)/(V[ind(2,n-2,m,n)]*dt)*f2[ind(2,n-2,m,n)]); 
+//   wave[ind(2,n-2,m,n)] = V[ind(2,n-2,m,n)]*dt*dx/(2*V[ind(2,n-2,m,n)]*dt + sqrt(2.)*dx)*
+//          (wave[ind(3,n-2,m,n)]/dx + wave[ind(2,n-3,m,n)]/dx +
+//          sqrt(2.)/(V[ind(2,n-2,m,n)]*dt)*f2[ind(2,n-2,m,n)]); 
 
-  wave[ind(1,n-3,m,n)] = V[ind(1,n-3,m,n)]*dt*dx/(2*V[ind(1,n-3,m,n)]*dt + sqrt(2.)*dx)*
-         (wave[ind(2,n-3,m,n)]/dx + wave[ind(1,n-4,m,n)]/dx +
-         sqrt(2.)/(V[ind(1,n-3,m,n)]*dt)*f2[ind(1,n-3,m,n)]);
+//   wave[ind(1,n-3,m,n)] = V[ind(1,n-3,m,n)]*dt*dx/(2*V[ind(1,n-3,m,n)]*dt + sqrt(2.)*dx)*
+//          (wave[ind(2,n-3,m,n)]/dx + wave[ind(1,n-4,m,n)]/dx +
+//          sqrt(2.)/(V[ind(1,n-3,m,n)]*dt)*f2[ind(1,n-3,m,n)]);
 
-  wave[ind(1,n-2,m,n)] = V[ind(1,n-2,m,n)]*dt*dx/(2*V[ind(1,n-2,m,n)]*dt + sqrt(2.)*dx)*
-         (wave[ind(2,n-2,m,n)]/dx + wave[ind(1,n-3,m,n)]/dx +
-         sqrt(2.)/(V[ind(1,n-2,m,n)]*dt)*f2[ind(1,n-2,m,n)]);
+//   wave[ind(1,n-2,m,n)] = V[ind(1,n-2,m,n)]*dt*dx/(2*V[ind(1,n-2,m,n)]*dt + sqrt(2.)*dx)*
+//          (wave[ind(2,n-2,m,n)]/dx + wave[ind(1,n-3,m,n)]/dx +
+//          sqrt(2.)/(V[ind(1,n-2,m,n)]*dt)*f2[ind(1,n-2,m,n)]);
 
-  // for upper left hand corner
+//   // for upper left hand corner
   
-  wave[ind(2,1,m,n)] = V[ind(2,1,m,n)]*dt*dx/(2*V[ind(2,1,m,n)]*dt + sqrt(2.)*dx)*
-         (wave[ind(3,1,m,n)]/dx + wave[ind(2,2,m,n)]/dx +
-         sqrt(2.)/(V[ind(2,1,m,n)]*dt)*f2[ind(2,1,m,n)]);
+//   wave[ind(2,1,m,n)] = V[ind(2,1,m,n)]*dt*dx/(2*V[ind(2,1,m,n)]*dt + sqrt(2.)*dx)*
+//          (wave[ind(3,1,m,n)]/dx + wave[ind(2,2,m,n)]/dx +
+//          sqrt(2.)/(V[ind(2,1,m,n)]*dt)*f2[ind(2,1,m,n)]);
   
-  wave[ind(1,2,m,n)] = V[ind(1,2,m,n)]*dt*dx/(2*V[ind(1,2,m,n)]*dt + sqrt(2.)*dx)*
-         (wave[ind(2,2,m,n)]/dx + wave[ind(1,3,m,n)]/dx +
-         sqrt(2.)/(V[ind(1,2,m,n)]*dt)*f2[ind(1,2,m,n)]); 
+//   wave[ind(1,2,m,n)] = V[ind(1,2,m,n)]*dt*dx/(2*V[ind(1,2,m,n)]*dt + sqrt(2.)*dx)*
+//          (wave[ind(2,2,m,n)]/dx + wave[ind(1,3,m,n)]/dx +
+//          sqrt(2.)/(V[ind(1,2,m,n)]*dt)*f2[ind(1,2,m,n)]); 
 
-  wave[ind(1,1,m,n)] = V[ind(1,1,m,n)]*dt*dx/(2*V[ind(1,1,m,n)]*dt + sqrt(2.)*dx)*
-         (wave[ind(2,1,m,n)]/dx + wave[ind(1,2,m,n)]/dx +
-         sqrt(2.)/(V[ind(1,1,m,n)]*dt)*f2[ind(1,1,m,n)]);
+//   wave[ind(1,1,m,n)] = V[ind(1,1,m,n)]*dt*dx/(2*V[ind(1,1,m,n)]*dt + sqrt(2.)*dx)*
+//          (wave[ind(2,1,m,n)]/dx + wave[ind(1,2,m,n)]/dx +
+//          sqrt(2.)/(V[ind(1,1,m,n)]*dt)*f2[ind(1,1,m,n)]);
 
-}
+// }
 	
 }
 
