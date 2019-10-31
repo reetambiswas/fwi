@@ -16,6 +16,7 @@ int main()
 
 	NX=dimMod[1]+2*pad;
 	NZ=dimMod[0]+2*pad;
+	NZ1=dimMod[0]+2*pad;
 
 
 	
