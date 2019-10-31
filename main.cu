@@ -35,7 +35,7 @@ int main()
 	// std::string veloFn="marmousi.dat";
 	// std::string veloFn="marmsmooth.dat";
 	// std::string veloFn="marmhard.dat";
-	 std::string veloFn="homogenous.velo";
+	std::string veloFn="homogenous.velo";
 	// std::string sourceFn="wavelet2.dat";
 	
 	
@@ -83,7 +83,7 @@ int main()
 	
 
 	printf("Position of Source:\nX:%f\nZ:%f\n",source_x,source_z);
-		
+	
 
 	double stability=(double)(dt/dx)*max(velo1,dimMod);
 	printf("Stability=%f\n",(float)stability);
@@ -120,7 +120,7 @@ int main()
 	t2=clock();
 	//Creating Device variables in cuda devices
 	float *d_field1, *d_field2, *d_wavelet, *source_grid, *d_velocity, *d_wave_propagate_t, 
-			*d_laplace_temp, *d_laplace, *d_C, *d_correctField, *d_temp1, *d_G, *d_cerjanMatrix;
+	*d_laplace_temp, *d_laplace, *d_C, *d_correctField, *d_temp1, *d_G, *d_cerjanMatrix;
 	cudaError_t cudaStatus;
 	
 	cudaStatus=cudaMalloc((void**)&d_field1,NX*NZ/*dimMod[0]*dimMod[1]*/*sizeof(float));
@@ -169,7 +169,7 @@ int main()
 	//Generating Wavelet
 
 	rickerWavelet<<<gridDim,blockDim>>>( d_wavelet, f, dimW[0]*dimW[1], dt);
-cudaStatus = cudaMemcpy(wavelet, d_wavelet , dimW[0]*dimW[1]*sizeof(float), cudaMemcpyDeviceToHost);
+	cudaStatus = cudaMemcpy(wavelet, d_wavelet , dimW[0]*dimW[1]*sizeof(float), cudaMemcpyDeviceToHost);
 	cudaCheck(cudaStatus);
 	VectoFileWrite(wavelet, dimW[0]*dimW[1], "outWavelet.dat");
 	
@@ -263,7 +263,7 @@ cudaStatus = cudaMemcpy(wavelet, d_wavelet , dimW[0]*dimW[1]*sizeof(float), cuda
 		// cudaCheck(cudaStatus);
 		// VectoFileWrite(check, size, "check.dat");
 		//exit(1);
-		
+			
 		//ABC
 		 ABC_inner<<<gridDim,blockDim>>>(d_velocity,d_field1,d_field2,d_wave_propagate_t,dx,dt,bc,NZ/*dimMod[0]*/,NX/*dimMod[1]*/);
 		//ABC_outer<<<gridDim,blockDim>>>(d_velocity,d_field1,d_field2,d_wave_propagate_t,dx,dt,bc,dimMod[0],dimMod[1]);
@@ -285,62 +285,62 @@ cudaStatus = cudaMemcpy(wavelet, d_wavelet , dimW[0]*dimW[1]*sizeof(float), cuda
 
 		// cerjanBoundaryCondition<<<gridDim,blockDim>>>( d_wave_propagate_t,  d_field1,  d_field2, d_cerjanMatrix, NZ, NX);
 
-		
-		
-		
+			
+			
+			
 		//field1=field2;
 		cudaStatus=cudaMemcpy(d_field1,d_field2,NX*NZ/*dimMod[0]*dimMod[1]*/*sizeof(float),cudaMemcpyDeviceToDevice);
-		cudaCheck(cudaStatus);
-		
-		
-		
-		if(step+1<dimW[0])
-		{
-			add_source<<<gridDim,blockDim>>>(d_wave_propagate_t,d_field2,source_grid,wavelet[step+1],NZ/*dimMod[0]*/,NX/*dimMod[1]*/);
-			
-		}
-		else
-		{
-			cudaStatus=cudaMemcpy(d_field2,d_wave_propagate_t,NX*NZ/*dimMod[0]*dimMod[1]*/*sizeof(float),cudaMemcpyDeviceToDevice);
-			cudaCheck(cudaStatus);			
-		}
-		
-		if(remainderf((float)step,1)==0)
-		{
-			extractCorrectRegion<<<gridDim,blockDim>>>(d_correctField,d_field2,dimMod[0],dimMod[1],pad);
-			cudaStatus=cudaMemcpy(check,d_correctField,dimMod[0]*dimMod[1]*sizeof(float),cudaMemcpyDeviceToHost);
 			cudaCheck(cudaStatus);
+			
+			
+			
+			if(step+1<dimW[0])
+			{
+			add_source<<<gridDim,blockDim>>>(d_wave_propagate_t,d_field2,source_grid,wavelet[step+1],NZ/*dimMod[0]*/,NX/*dimMod[1]*/);
+				
+			}
+			else
+			{
+			cudaStatus=cudaMemcpy(d_field2,d_wave_propagate_t,NX*NZ/*dimMod[0]*dimMod[1]*/*sizeof(float),cudaMemcpyDeviceToDevice);
+				cudaCheck(cudaStatus);			
+			}
+			
+			if(remainderf((float)step,1)==0)
+			{
+				extractCorrectRegion<<<gridDim,blockDim>>>(d_correctField,d_field2,dimMod[0],dimMod[1],pad);
+				cudaStatus=cudaMemcpy(check,d_correctField,dimMod[0]*dimMod[1]*sizeof(float),cudaMemcpyDeviceToHost);
+				cudaCheck(cudaStatus);
 			// snprintf(buffer, sizeof(char) * 32, "file%d.txt", step);
 			// VectoFileWrite(check, size, buffer);
-			myFile.write ((char*)check, size*sizeof(float));
-		}
+				myFile.write ((char*)check, size*sizeof(float));
+			}
 			
+		}
+
+		
+		myFile.close();
+		t4=clock();
+
+		printf("Total Execution Time:%f\n",((float)t4-(float)t1)/CLOCKS_PER_SEC);
+		printf("Cuda Device Query Execution Time:%f\n",((float)t2-(float)t1)/CLOCKS_PER_SEC);
+		printf("Cuda Malloc Execution Time:%f\n",((float)t3-(float)t2)/CLOCKS_PER_SEC);
+		printf("Cuda Loop Execution Time:%f\n",((float)t4-(float)t3)/CLOCKS_PER_SEC);
+
+		cudaFree(d_field1);
+		cudaFree(d_field2);
+		cudaFree(d_wavelet);
+		cudaFree(source_grid);
+		cudaFree(d_velocity);
+		cudaFree(d_wave_propagate_t);
+		cudaFree(d_laplace_temp);
+		cudaFree(d_laplace);
+		
+		
+		
+		
+
+
+		return 0;
+		
+		
 	}
-
-	
- myFile.close();
-t4=clock();
-
-printf("Total Execution Time:%f\n",((float)t4-(float)t1)/CLOCKS_PER_SEC);
-printf("Cuda Device Query Execution Time:%f\n",((float)t2-(float)t1)/CLOCKS_PER_SEC);
-printf("Cuda Malloc Execution Time:%f\n",((float)t3-(float)t2)/CLOCKS_PER_SEC);
-printf("Cuda Loop Execution Time:%f\n",((float)t4-(float)t3)/CLOCKS_PER_SEC);
-
-	cudaFree(d_field1);
-	cudaFree(d_field2);
-	cudaFree(d_wavelet);
-	cudaFree(source_grid);
-	cudaFree(d_velocity);
-	cudaFree(d_wave_propagate_t);
-	cudaFree(d_laplace_temp);
-	cudaFree(d_laplace);
-	
-	
-	
-	
-
-
-	return 0;
-	
-	
-}
